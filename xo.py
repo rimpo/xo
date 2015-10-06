@@ -31,8 +31,13 @@ class Board:
 	def list_of_moves(self):
 		return [i for i, v in enumerate(self.arr) if v == self.empty_token]
 
+	def move(self, pos, token):
+		self.arr[pos] = token
+
 	def display(self):
-		pass
+		print self.arr[0], self.arr[1], self.arr[2]
+		print self.arr[3], self.arr[4], self.arr[5]
+		print self.arr[6], self.arr[7], self.arr[8]
 
 class AI:
 	def __init__(self, board):
@@ -44,19 +49,19 @@ class AI:
 		self.board.arr[move] = curr_token
 		total = 0
 		count = 0
-		print curr_token, move
+		#print curr_token, move
 		t = self.board.is_winner()
 		if t == self.ai_token:
 			self.board.arr[move] = self.board.empty_token
-			print 'x is winner'
+			#print 'x is winner'
 			return 100
 		elif t == self.opponent_token:
 			self.board.arr[move] = self.board.empty_token
-			print 'o is winner'
+			#jprint 'o is winner'
 			return 0
 		elif self.board.is_game_over():
 			self.board.arr[move] = self.board.empty_token
-			print 'x is draw'
+			#print 'x is draw'
 			return 50
 		else:
 			for m in range(9):
@@ -71,23 +76,40 @@ class AI:
 		scores = {}
 		max_score = 0
 		best_move = 0
-		print moves
+		#print moves
 		for m in moves:
 			scores[m] = self.play(m, self.ai_token)
 			if max_score < scores[m]:
 				max_score = scores[m]
 				best_move = m
-		print scores
+		#print scores
 		return best_move
 
 def TestCase1():
 	board = Board()
 	board.arr =		['O', ' ', ' ',
-					' ', ' ', ' ',
-					' ', ' ', ' ',
+					' ', 'X', ' ',
+					' ', ' ', 'O',
 			]
+	board.display()
+
 	ai = AI(board)
 	print ai.evaluate_move()
 
+def start_game():
+	board = Board()
+	ai = AI(board)
+	board.display()
+	while not board.is_game_over():
+		m = raw_input('Play your move(you are O):')
+		board.arr[int(m)] = 'O'
+		m_ai = ai.evaluate_move()
+		board.arr[m_ai] = 'X'
+
+		v = board.is_winner()
+		board.display()
+		if v != ' ':
+			print v + ' winner!!'
+			break
 if __name__ == '__main__':
-	TestCase1()
+	start_game()
